@@ -77,12 +77,12 @@ unpack_files() {
 
 # === Функция: Загрузка Docker-образа ===
 load_docker_image() {
-  for archive in connector*.tar.gz; do
+  for archive in connector*.tar; do
     if [[ -f $archive ]]; then
       echo "Загрузка Docker-образа из файла $archive..."
       docker load < "$archive"
     else
-      echo "Файл с шаблоном connector*.tar.gz не найдены!"
+      echo "Файл с шаблоном connector*.tar не найдены!"
       exit 1
     fi
   done
@@ -122,7 +122,7 @@ update_config_yaml() {
 
       # Добавление необходимых строк в config.yaml
       cat <<EOF >> "$CONFIG_YAML"
-    - id: $ORG_ID
+- id: $ORG_ID
       title: $ORG_ID
       encryption-certificate-file: certs/${ORG_ID}-encryption.crt
 EOF
@@ -157,7 +157,7 @@ run_docker_commands() {
     DOCKER_COMPOSE_CMD="docker compose"
   fi
 
-  $DOCKER_COMPOSE_CMD up -d agent
+  $DOCKER_COMPOSE_CMD up -d connector
 }
 
 # === Функция: Установка зависимостей ===
@@ -181,7 +181,7 @@ install_dependencies() {
 # === Основной код ===
 main() {
   install_dependencies      # Устанавливаем зависимости
-  check_connection          # Проверка соединений
+#  check_connection          # Проверка соединений
   run_crt_script            # Запуск crt.sh
   check_config_file         # Проверка наличия config.json
   extract_config_values     # Извлечение значений
